@@ -1,3 +1,5 @@
+// ignore_for_file: missing_return
+
 import 'package:vigenesia/Constant/const.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,6 @@ import 'package:dio/dio.dart';
 import 'MainScreens.dart';
 import 'Register.dart';
 import 'package:flutter/gestures.dart';
-import 'dart:convert';
 import 'package:vigenesia/Models/Login_Model.dart';
 
 class Login extends StatefulWidget {
@@ -135,7 +136,7 @@ class _LoginState extends State<Login> {
                                                   nama = value.data.nama;
                                                   idUser = value.data.iduser;
                                                   print(
-                                                      "Ini Data Id ---> ${idUser}");
+                                                      "Ini Data Id ---> $idUser");
                                                   Navigator.pushReplacement(
                                                       context,
                                                       new MaterialPageRoute(

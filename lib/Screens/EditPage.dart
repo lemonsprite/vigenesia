@@ -1,13 +1,12 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'dart:convert';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dio/dio.dart';
 
 import 'package:vigenesia/Constant/const.dart';
-
-import 'package:vigenesia/Models/Motivasi_Model.dart';
 
 class EditPage extends StatefulWidget {
   final String id;
@@ -22,8 +21,8 @@ class _EditPageState extends State<EditPage> {
   String baseurl = url;
 
   var dio = Dio();
-  Future<dynamic> putPost(String isi_motivasi, String ids) async {
-    Map<String, dynamic> data = {"isi_motivasi": isi_motivasi, "id": ids};
+  Future<dynamic> putPost(String isiMotivasi, String ids) async {
+    Map<String, dynamic> data = {"isi_motivasi": isiMotivasi, "id": ids};
     var response = await dio.put('$baseurl/api/dev/PUTmotivasi',
         data: data,
         options: Options(

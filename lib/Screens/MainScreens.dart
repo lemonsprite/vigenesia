@@ -1,6 +1,9 @@
+// ignore_for_file: unused_local_variable, non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:vigenesia/Models/Motivasi_Model.dart';
+import 'package:vigenesia/Models/User_Model.dart';
 import 'package:vigenesia/Screens/EditPage.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -63,6 +66,8 @@ class _MainScreensState extends State<MainScreens> {
     }
   }
 
+
+
   Future<dynamic> deletePost(String id) async {
     dynamic data = {
       "id": id,
@@ -86,11 +91,24 @@ class _MainScreensState extends State<MainScreens> {
     print(" ${response.data}");
     if (response.statusCode == 200) {
       var getUsersData = response.data as List;
+      
       var listUsers =
           getUsersData.map((i) => MotivasiModel.fromJson(i)).toList();
       return listUsers;
     } else {
       throw Exception('Failed to load');
+    }
+  }
+
+  Future<UserModel> getUser(var id) async {
+    var res = await dio.get('$baseurl/api/user?iduser=$id');
+
+    if(res.statusCode == 200) {
+      var userData = res.data;
+
+      return userData;
+    } else {
+      throw Exception('Fail');
     }
   }
 
@@ -208,17 +226,16 @@ class _MainScreensState extends State<MainScreens> {
                           setState(() {
                             trigger = value;
                             print(
-                                " HASILNYA --> ${trigger}"); // hasil ganti value
+                                " HASILNYA --> $trigger"); // hasil ganti value
                           });
                         },
                         name: "_",
                         options: ["Motivasi By All", "Motivasi By User"]
                             .map((e) => FormBuilderFieldOption(
-                                value: e, child: Text("${e}")))
+                                value: e, child: Text("$e")))
                             .toList()),
 
-                    trigger == "Motivasi By All"
-                        ? FutureBuilder(
+                    if (trigger == "Motivasi By All") FutureBuilder(
                             future: getData2(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<List<MotivasiModel>> snapshot) {
@@ -227,18 +244,32 @@ class _MainScreensState extends State<MainScreens> {
                                   child: Column(
                                     children: [
                                       for (var item in snapshot.data)
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: ListView(
-                                            shrinkWrap: true,
+                                                
+                                        
+                                        Card(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Container(
-                                                  child:
-                                                      Text(item.isiMotivasi)),
+                                              ListTile(
+                                                leading: Icon(Icons.person),
+                                                title: Text(item.isiMotivasi),
+                                                subtitle: Text(''),
+                                              ),
                                             ],
                                           ),
                                         ),
+                                        // Container(
+                                        //   width:
+                                        //       MediaQuery.of(context).size.width,
+                                        //   child: ListView(
+                                        //     shrinkWrap: true,
+                                        //     children: [
+                                        //       Container(
+                                        //           child:
+                                        //               Text(item.isiMotivasi)),
+                                        //     ],
+                                        //   ),
+                                        // ),
                                     ],
                                   ),
                                 );
@@ -248,8 +279,7 @@ class _MainScreensState extends State<MainScreens> {
                               } else {
                                 return CircularProgressIndicator();
                               }
-                            })
-                        : Container(),
+                            }) else Container(),
                     trigger == "Motivasi By User"
                         ? FutureBuilder(
                             future: getData(),

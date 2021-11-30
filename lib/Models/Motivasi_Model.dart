@@ -15,6 +15,7 @@ class MotivasiModel {
   MotivasiModel({
     this.id,
     this.isiMotivasi,
+    this.idUser,
     this.idKategori,
     this.tanggalInput,
     this.tanggalUpdate,
@@ -23,11 +24,13 @@ class MotivasiModel {
   String id;
   String isiMotivasi;
   String idKategori;
+  String idUser;
   DateTime tanggalInput;
   String tanggalUpdate;
 
   factory MotivasiModel.fromJson(Map<String, dynamic> json) => MotivasiModel(
         id: json["id"],
+        idUser: json['iduser'],
         isiMotivasi: json["isi_motivasi"],
         idKategori: json["id_kategori"],
         tanggalInput: DateTime.parse(json["tanggal_input"]),
@@ -36,6 +39,7 @@ class MotivasiModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "iduser": idUser,
         "isi_motivasi": isiMotivasi,
         "id_kategori": idKategori,
         "tanggal_input":
