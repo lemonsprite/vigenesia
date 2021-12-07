@@ -13,7 +13,7 @@ import 'package:vigenesia/Constant/const.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 class MainScreens extends StatefulWidget {
-  final String idUser;
+  final int idUser;
   final String nama;
   const MainScreens({Key key, this.nama, this.idUser}) : super(key: key);
 
