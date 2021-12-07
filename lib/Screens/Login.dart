@@ -143,8 +143,7 @@ class _LoginState extends State<Login> {
                                                           builder: (BuildContext
                                                                   context) =>
                                                               new MainScreens(
-                                                                  idUser:
-                                                                      idUser,
+                                                                  idUser: idUser,
                                                                   nama: nama)));
                                                 })
                                               }
