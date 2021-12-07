@@ -46,7 +46,19 @@ class _LoginState extends State<Login> {
   //   }
   // }
 
-  
+  Future<LoginModel> login(String email, String password) async {
+    return http.post(
+      Uri.parse("$url/login"),
+      headers: <String, String>{
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+      }),
+    );
+    
+  }
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
