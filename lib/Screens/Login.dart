@@ -1,11 +1,10 @@
 // ignore_for_file: missing_return
 
-import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:vigenesia/Constant/const.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 // import 'package:dio/dio.dart';
 import 'MainScreens.dart';
@@ -26,39 +25,26 @@ class _LoginState extends State<Login> {
 
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
-  // Future<LoginModels> postLogin(String email, String password) async {
-  //   var dio = Dio();
-  //   String baseurl = url;
+  Future<LoginModel> postLogin(String email, String password) async {
+    var dio = Dio();
+    String baseurl = url;
 
-  //   Map<String, dynamic> data = {"email": email, "password": password};
+    Map<String, dynamic> data = {"email": email, "password": password};
 
-  //   try {
-  //     final response = await dio.post("$baseurl/api/login/",
-  //         data: data,
-  //         options: Options(headers: {'Content-type': 'application/json'}));
-  //     print("Respon -> ${response.data} + ${response.statusCode}");
-  //     if (response.statusCode == 200) {
-  //       final loginModel = LoginModels.fromJson(response.data);
-  //       return loginModel;
-  //     }
-  //   } catch (e) {
-  //     print("Failed To Load $e");
-  //   }
-  // }
-
-  Future<LoginModel> login(String email, String password) async {
-    return http.post(
-      Uri.parse("$url/login"),
-      headers: <String, String>{
-        'Content-Type': 'application/json'
-      },
-      body: jsonEncode(<String, String>{
-        'email': email,
-        'password': password,
-      }),
-    );
-    
+    try {
+      final response = await dio.post("$baseurl/api/login/",
+          data: data,
+          options: Options(headers: {'Content-type': 'application/json'}));
+      print("Respon -> ${response.data} + ${response.statusCode}");
+      if (response.statusCode == 200) {
+        final loginModel = LoginModel.fromJson(response.data);
+        return loginModel;
+      }
+    } catch (e) {
+      print("Failed To Load $e");
+    }
   }
+
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -144,7 +130,7 @@ class _LoginState extends State<Login> {
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  await login(emailController.text,
+                                  await postLogin(emailController.text,
                                           passwordController.text)
                                       .then((value) => {
                                             if (value != null)
