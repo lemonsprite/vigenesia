@@ -1,17 +1,14 @@
 // ignore_for_file: missing_return
 
-
-import 'package:dio/dio.dart';
-import 'package:vigenesia/Constant/const.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:vigenesia/services/api_manager.dart';
+import 'package:vigenesia/services/shared_prefs.dart';
 // import 'package:dio/dio.dart';
 import 'MainScreens.dart';
 import 'Register.dart';
 import 'package:flutter/gestures.dart';
-import 'package:vigenesia/Models/LoginModel.dart';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
@@ -21,8 +18,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
-
   String nama;
   int idUser;
 
@@ -47,7 +42,6 @@ class _LoginState extends State<Login> {
   //     print("Failed To Load $e");
   //   }
   // }
-
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -138,23 +132,26 @@ class _LoginState extends State<Login> {
                                   setState(() {
                                     _isLoading = true;
                                   });
-                                  await API_Manager().login(emailController.text, passwordController.text).then((value) => {
+                                  await API_Manager()
+                                      .login(emailController.text,
+                                          passwordController.text)
+                                      .then((value) => {
                                             if (value != null)
                                               {
                                                 setState(() {
-                                                  nama = value.user.nama;
-                                                  idUser = value.user.id;
+                                                  SharedPrefs().keyInit('token', value.token);
+                                                      SharedPrefs().keyInit('idUser', value.user.id);
+                                                  var token = SharedPrefs()
+                                                      .keyFetch('token');
 
                                                   print(
-                                                      "Ini Data Id ---> $idUser");
+                                                      "Ini Data Id ---> $token");
                                                   Navigator.pushReplacement(
-                                                      context,
-                                                      new MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              new MainScreens(
-                                                                  idUser: idUser,
-                                                                  nama: nama)));
+                                                    context,
+                                                    new MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          new MainScreens(token: token)));
                                                 })
                                               }
                                             else if (value == null)

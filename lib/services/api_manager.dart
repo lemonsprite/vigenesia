@@ -3,36 +3,133 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:vigenesia/Models/_auth_callback.dart';
+import 'package:vigenesia/Models/_get_motivasi.dart';
+import 'package:vigenesia/Models/_get_motivasi_byUser.dart';
+import 'package:vigenesia/Models/_res_callback.dart';
 import 'package:vigenesia/constant/const.dart';
 import 'package:vigenesia/models/_login_model.dart';
 
 class API_Manager {
+  var client = http.Client();
+  var callback;
 
-  
-
-  Future<LoginModel> login(String email, String password) async {
-    var client = http.Client();
-    var loginModel;
+  Future<AuthCallback> login(String email, String password) async {
+    
 
     try {
-      Map data = {
-        'email': email,
-        'password': password
-      };
-      var response = await client.post(
+      Map data = {'email': email, 'password': password};
+      var res = await client.post(
         Const.loginEndpoint,
         headers: <String, String>{'ContentType': 'application/json'},
         body: data,
       );
-      
-      if (response.statusCode == 200) {
-        var jsonString = response.body;
+
+      if (res.statusCode == 200) {
+        var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
-        loginModel = LoginModel.fromJson(jsonMap);
+        callback = LoginModel.fromJson(jsonMap);
       }
     } catch (e) {
-      return loginModel;
+      return callback;
     }
-    return loginModel;
+    return callback;
   }
+
+  Future<AuthCallback> register(String nama, String email, String password, String password_confirmation) async {
+    
+
+    try {
+      Map data = {'nama':nama, 'email': email, 'password': password, 'password_confirmation': password_confirmation};
+      var res = await client.post(
+        Const.loginEndpoint,
+        headers: <String, String>{'ContentType': 'application/json'},
+        body: data,
+      );
+
+      if (res.statusCode == 200) {
+        var jsonString = res.body;
+        var jsonMap = json.decode(jsonString);
+        callback = LoginModel.fromJson(jsonMap);
+      }
+    } catch (e) {
+      return callback;
+    }
+    return callback;
+  }
+
+  Future<GetMotivasi> getAllMotivasi(var token) async {
+
+    try {
+      var res = await client.get(
+        Const.motivasiEndpoint,
+        headers: <String, String>{
+          'ContentType': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      if(res.statusCode == 200) {
+        var jsonString = res.body;
+        var jsonMap = json.decode(jsonString);
+        callback = GetMotivasi.fromJson(jsonMap);
+      }
+      
+    } catch (e) {
+      throw callback;
+    }
+    return callback;
+  }
+
+  Future<GetMotivasiByUser> getMotivasiUser(var token, var id) async {
+
+    try {
+      var res = await client.get(
+        Const.motivasiByUser(id),
+        headers: <String, String>{
+          'ContentType': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      if(res.statusCode == 200) {
+        var jsonString = res.body;
+        var jsonMap = json.decode(jsonString);
+        callback = GetMotivasiByUser.fromJson(jsonMap);
+      }
+      
+    } catch (e) {
+      throw callback;
+    }
+    return callback;
+  }
+
+  Future<ResCallback> deleteMotivasi(var token, var id) async {
+
+    
+    try {
+      var res = await client.delete(
+        Const.motivasiByUser(id),
+        headers: <String, String>{
+          'ContentType': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      if(res.statusCode == 200) {
+        var jsonString = res.body;
+        var jsonMap = json.decode(jsonString);
+        callback = ResCallback.fromJson(jsonMap);
+      }
+      
+    } catch (e) {
+      throw callback;
+    }
+    return callback;
+  }
+
+  Future<http.Response> postMotivasi(var isi, var idUser) {
+    client.post(url)
+  }
+
 }

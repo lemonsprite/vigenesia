@@ -6,8 +6,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dio/dio.dart';
 
-import 'package:vigenesia/Constant/const.dart';
-
 class EditPage extends StatefulWidget {
   final String id;
   final String isi_motivasi;

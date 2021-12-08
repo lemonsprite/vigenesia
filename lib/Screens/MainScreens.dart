@@ -7,21 +7,23 @@ import 'package:vigenesia/Screens/EditPage.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:vigenesia/widget/flushbar_widget.dart';
 import 'Login.dart';
 import 'package:vigenesia/Constant/const.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 class MainScreens extends StatefulWidget {
-  final int idUser;
-  final String nama;
-  const MainScreens({Key key, this.nama, this.idUser}) : super(key: key);
+  // final int idUser;
+  // final String nama;
+  final String token;
+  const MainScreens({Key key, this.token}) : super(key: key);
 
   @override
   _MainScreensState createState() => _MainScreensState();
 }
 
 class _MainScreensState extends State<MainScreens> {
-  String baseurl = url;
+  // String baseurl = url;
   String id;
   var dio = Dio();
   List<MotivasiModel> ass = [];
@@ -83,20 +85,20 @@ class _MainScreensState extends State<MainScreens> {
     return resbody;
   }
 
-  Future<List<MotivasiModel>> getData2() async {
-    var response =
-        await dio.get('$baseurl/api/Get_motivasi'); // Ngambil by ALL USER
+  // Future<List<MotivasiModel>> getData2() async {
+  //   var response =
+  //       await dio.get('$baseurl/api/Get_motivasi'); // Ngambil by ALL USER
 
-    print(" ${response.data}");
-    if (response.statusCode == 200) {
-      var getUsersData = response.data as List;
+  //   print(" ${response.data}");
+  //   if (response.statusCode == 200) {
+  //     var getUsersData = response.data as List;
       
-      var listUsers = getUsersData.map((i) => MotivasiModel.fromJson(i)).toList();
-      return listUsers;
-    } else {
-      throw Exception('Failed to load');
-    }
-  }
+  //     var listUsers = getUsersData.map((i) => MotivasiModel.fromJson(i)).toList();
+  //     return listUsers;
+  //   } else {
+  //     throw Exception('Failed to load');
+  //   }
+  // }
 
 
   Future<void> _getData() async {
@@ -173,29 +175,23 @@ class _MainScreensState extends State<MainScreens> {
                       child: ElevatedButton(
                           onPressed: () async {
                             if (isiController.text.toString().isEmpty) {
-                              Flushbar(
-                                message: "Tidak Boleh Kosong",
-                                duration: Duration(seconds: 2),
-                                backgroundColor: Colors.redAccent,
-                                flushbarPosition: FlushbarPosition.TOP,
-                              ).show(context);
-                            } else if (isiController.text
-                                .toString()
-                                .isNotEmpty) {
-                              await sendMotivasi(
-                                isiController.text.toString(),
-                              ).then((value) => {
-                                    if (value != null)
-                                      {
-                                        Flushbar(
-                                          message: "Berhasil Submit",
-                                          duration: Duration(seconds: 2),
-                                          backgroundColor: Colors.greenAccent,
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                        ).show(context)
-                                      }
-                                  });
+                              Widget_Manager().flushbarInit("Data tidak boleh kosong!", Duration(seconds: 3),Colors.redAccent, FlushbarPosition.TOP).show(context);
+                            } else if (isiController.text.toString().isNotEmpty) {
+
+                              // await sendMotivasi(
+                              //   isiController.text.toString(),
+                              // ).then((value) => {
+                              //       if (value != null)
+                              //         {
+                              //           Flushbar(
+                              //             message: "Berhasil Submit",
+                              //             duration: Duration(seconds: 2),
+                              //             backgroundColor: Colors.greenAccent,
+                              //             flushbarPosition:
+                              //                 FlushbarPosition.TOP,
+                              //           ).show(context)
+                              //         }
+                              //     });
                             }
 
                             _getData();
