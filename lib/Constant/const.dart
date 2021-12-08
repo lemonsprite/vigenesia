@@ -1,3 +1,4 @@
-// String url = "http://vigenesia.org/";
-String url = "https://vigenesia.herokuapp.com/api";
-// String url = "http://192.168.1.40/";
+class Const {
+  static String baseUrl = 'https://vigenesia.herokuapp.com/api/v1';
+  static String loginEndpoint = '$baseUrl/login';
+}

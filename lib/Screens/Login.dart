@@ -6,6 +6,7 @@ import 'package:vigenesia/Constant/const.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:vigenesia/services/api_manager.dart';
 // import 'package:dio/dio.dart';
 import 'MainScreens.dart';
 import 'Register.dart';
@@ -20,34 +21,38 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+
   String nama;
   int idUser;
 
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
-  Future<LoginModel> postLogin(String email, String password) async {
-    var dio = Dio();
-    String baseurl = url;
+  // Future<LoginModel> postLogin(String email, String password) async {
+  //   var dio = Dio();
+  //   String baseurl = url;
 
-    Map<String, dynamic> data = {"email": email, "password": password};
+  //   Map<String, dynamic> data = {"email": email, "password": password};
 
-    try {
-      final response = await dio.post("$baseurl/api/login/",
-          data: data,
-          options: Options(headers: {'Content-type': 'application/json'}));
-      print("Respon -> ${response.data} + ${response.statusCode}");
-      if (response.statusCode == 200) {
-        final loginModel = LoginModel.fromJson(response.data);
-        return loginModel;
-      }
-    } catch (e) {
-      print("Failed To Load $e");
-    }
-  }
+  //   try {
+  //     final response = await dio.post("$baseurl/api/login/",
+  //         data: data,
+  //         options: Options(headers: {'Content-type': 'application/json'}));
+  //     print("Respon -> ${response.data} + ${response.statusCode}");
+  //     if (response.statusCode == 200) {
+  //       final loginModel = LoginModel.fromJson(response.data);
+  //       return loginModel;
+  //     }
+  //   } catch (e) {
+  //     print("Failed To Load $e");
+  //   }
+  // }
 
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -130,14 +135,16 @@ class _LoginState extends State<Login> {
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  await postLogin(emailController.text,
-                                          passwordController.text)
-                                      .then((value) => {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await API_Manager().login(emailController.text, passwordController.text).then((value) => {
                                             if (value != null)
                                               {
                                                 setState(() {
-                                                  nama = value.data.nama;
-                                                  idUser = value.data.id;
+                                                  nama = value.user.nama;
+                                                  idUser = value.user.id;
+
                                                   print(
                                                       "Ini Data Id ---> $idUser");
                                                   Navigator.pushReplacement(

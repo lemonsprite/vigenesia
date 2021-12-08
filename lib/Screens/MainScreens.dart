@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:vigenesia/Models/Motivasi_Model.dart';
-import 'package:vigenesia/Models/User_Model.dart';
 import 'package:vigenesia/Screens/EditPage.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -92,25 +91,13 @@ class _MainScreensState extends State<MainScreens> {
     if (response.statusCode == 200) {
       var getUsersData = response.data as List;
       
-      var listUsers =
-          getUsersData.map((i) => MotivasiModel.fromJson(i)).toList();
+      var listUsers = getUsersData.map((i) => MotivasiModel.fromJson(i)).toList();
       return listUsers;
     } else {
       throw Exception('Failed to load');
     }
   }
 
-  Future<UserModel> getUser(var id) async {
-    var res = await dio.get('$baseurl/api/user?iduser=$id');
-
-    if(res.statusCode == 200) {
-      var userData = res.data;
-
-      return userData;
-    } else {
-      throw Exception('Fail');
-    }
-  }
 
   Future<void> _getData() async {
     setState(() {
@@ -119,6 +106,8 @@ class _MainScreensState extends State<MainScreens> {
       return CircularProgressIndicator();
     });
   }
+
+  
 
   TextEditingController isiController = TextEditingController();
 
@@ -237,14 +226,16 @@ class _MainScreensState extends State<MainScreens> {
 
                     if (trigger == "Motivasi By All") FutureBuilder(
                             future: getData2(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<List<MotivasiModel>> snapshot) {
+                            builder: (BuildContext context, AsyncSnapshot<List<MotivasiModel>> snapshot) {
                               if (snapshot.hasData) {
+                                
                                 return Container(
                                   child: Column(
                                     children: [
                                       for (var item in snapshot.data)
-                                                
+                                        
+                                        
+                                          
                                         
                                         Card(
                                           child: Column(
