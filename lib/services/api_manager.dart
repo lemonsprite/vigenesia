@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, non_constant_identifier_names
 
 import 'dart:convert';
 
@@ -8,7 +8,6 @@ import 'package:vigenesia/Models/_get_motivasi.dart';
 import 'package:vigenesia/Models/_get_motivasi_byUser.dart';
 import 'package:vigenesia/Models/_res_callback.dart';
 import 'package:vigenesia/constant/const.dart';
-import 'package:vigenesia/models/_login_model.dart';
 
 class API_Manager {
   var client = http.Client();
@@ -28,7 +27,7 @@ class API_Manager {
       if (res.statusCode == 200) {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
-        callback = LoginModel.fromJson(jsonMap);
+        callback = AuthCallback.fromJson(jsonMap);
       }
     } catch (e) {
       return callback;
@@ -50,7 +49,7 @@ class API_Manager {
       if (res.statusCode == 200) {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
-        callback = LoginModel.fromJson(jsonMap);
+        callback = AuthCallback.fromJson(jsonMap);
       }
     } catch (e) {
       return callback;
@@ -129,7 +128,8 @@ class API_Manager {
   }
 
   Future<http.Response> postMotivasi(var isi, var idUser) {
-    client.post(url)
+    client.post('url');
+    return null;
   }
 
 }
