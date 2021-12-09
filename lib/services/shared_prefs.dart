@@ -4,7 +4,7 @@ class SharedPrefs {
   SharedPreferences _sharedPrefs;
   // SharedPrefs()
 
-  keyInit(String key, var value) async {
+  keyInitString(String key, String value) async {
     _sharedPrefs = await SharedPreferences.getInstance();
     _sharedPrefs.setString(key, value);
   }
@@ -12,5 +12,10 @@ class SharedPrefs {
   keyFetch(String key) async {
     _sharedPrefs = await SharedPreferences.getInstance();
     _sharedPrefs.getString(key);
+  }
+
+  keyInitInteger(String key, int value) async {
+    _sharedPrefs = await SharedPreferences.getInstance();
+    _sharedPrefs.setInt(key, value);
   }
 }

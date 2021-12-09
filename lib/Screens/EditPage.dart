@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dio/dio.dart';
+import 'package:vigenesia/Constant/const.dart';
 
 class EditPage extends StatefulWidget {
   final String id;
@@ -16,7 +17,7 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  String baseurl = url;
+  String baseurl = Const.baseUrl;
 
   var dio = Dio();
   Future<dynamic> putPost(String isiMotivasi, String ids) async {

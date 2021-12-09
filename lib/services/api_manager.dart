@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:vigenesia/Models/_auth_callback.dart';
 import 'package:vigenesia/Models/_get_motivasi.dart';
@@ -14,35 +15,40 @@ class API_Manager {
   var callback;
 
   Future<AuthCallback> login(String email, String password) async {
-    
-
     try {
       Map data = {'email': email, 'password': password};
       var res = await client.post(
         Const.loginEndpoint,
-        headers: <String, String>{'ContentType': 'application/json'},
+        headers: {
+          'Accept': 'application/json',
+          'ContentType': 'application/json'},
         body: data,
       );
 
-      if (res.statusCode == 200) {
+      if (res.statusCode == 201) {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = AuthCallback.fromJson(jsonMap);
+        return callback;
       }
     } catch (e) {
       return callback;
     }
-    return callback;
+    
   }
 
-  Future<AuthCallback> register(String nama, String email, String password, String password_confirmation) async {
-    
-
+  Future<AuthCallback> register(String nama, String email, String password,
+      String password_confirmation) async {
     try {
-      Map data = {'nama':nama, 'email': email, 'password': password, 'password_confirmation': password_confirmation};
+      Map data = {
+        'nama': nama,
+        'email': email,
+        'password': password,
+        'password_confirmation': password_confirmation
+      };
       var res = await client.post(
-        Const.loginEndpoint,
-        headers: <String, String>{'ContentType': 'application/json'},
+        Const.registerEndpoint,
+        headers: <String, String>{'Accept': 'application/json'},
         body: data,
       );
 
@@ -58,7 +64,6 @@ class API_Manager {
   }
 
   Future<GetMotivasi> getAllMotivasi(var token) async {
-
     try {
       var res = await client.get(
         Const.motivasiEndpoint,
@@ -68,12 +73,11 @@ class API_Manager {
         },
       );
 
-      if(res.statusCode == 200) {
+      if (res.statusCode == 200) {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = GetMotivasi.fromJson(jsonMap);
       }
-      
     } catch (e) {
       throw callback;
     }
@@ -81,7 +85,6 @@ class API_Manager {
   }
 
   Future<GetMotivasiByUser> getMotivasiUser(var token, var id) async {
-
     try {
       var res = await client.get(
         Const.motivasiByUser(id),
@@ -91,12 +94,11 @@ class API_Manager {
         },
       );
 
-      if(res.statusCode == 200) {
+      if (res.statusCode == 200) {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = GetMotivasiByUser.fromJson(jsonMap);
       }
-      
     } catch (e) {
       throw callback;
     }
@@ -104,8 +106,6 @@ class API_Manager {
   }
 
   Future<ResCallback> deleteMotivasi(var token, var id) async {
-
-    
     try {
       var res = await client.delete(
         Const.motivasiByUser(id),
@@ -115,21 +115,38 @@ class API_Manager {
         },
       );
 
-      if(res.statusCode == 200) {
+      if (res.statusCode == 200) {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = ResCallback.fromJson(jsonMap);
       }
-      
     } catch (e) {
       throw callback;
     }
     return callback;
   }
 
-  Future<http.Response> postMotivasi(var isi, var idUser) {
-    client.post('url');
-    return null;
-  }
+  Future<http.Response> postMotivasi(var isi, var idUser, var token) async {
+    Map data = {'isi_motivasi': isi, 'id_user': idUser};
+    try {
+      var res = await client.post(
+        Const.motivasiEndpoint,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Content-Type': Headers.formUrlEncodedContentType,
+        },
+        body: data,
+      );
 
+      if (res.body != null) {
+        var jsonString = res.body;
+        var jsonMap = json.decode(jsonString);
+        callback = ResCallback.fromJson(jsonMap);
+      } else {}
+    } catch (e) {
+      return callback;
+    }
+    return callback;
+  }
 }

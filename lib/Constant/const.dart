@@ -3,6 +3,7 @@ class Const {
 
 
   static var loginEndpoint = '$baseUrl/login';
+  static var registerEndpoint = '$baseUrl/register';
   static var motivasiEndpoint = '$baseUrl/motivasi';
 
   static String motivasiByUser(var id) {

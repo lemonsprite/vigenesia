@@ -118,7 +118,7 @@ class _RegisterState extends State<Register> {
                                   .flushbarInit(
                                       'Registrasi gagal! Silahkan cek kembali.',
                                       Duration(seconds: 3),
-                                      Colors.greenAccent,
+                                      Colors.redAccent,
                                       FlushbarPosition.TOP)
                                   .show(context);
                             }

@@ -7,108 +7,24 @@ import 'package:vigenesia/Screens/EditPage.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:vigenesia/services/api_manager.dart';
+import 'package:vigenesia/services/shared_prefs.dart';
 import 'package:vigenesia/widget/flushbar_widget.dart';
 import 'Login.dart';
-import 'package:vigenesia/Constant/const.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 class MainScreens extends StatefulWidget {
   // final int idUser;
   // final String nama;
-  final String token;
-  const MainScreens({Key key, this.token}) : super(key: key);
+  // final String token;
+  const MainScreens({Key key}) : super(key: key);
 
   @override
   _MainScreensState createState() => _MainScreensState();
 }
 
 class _MainScreensState extends State<MainScreens> {
-  // String baseurl = url;
-  String id;
-  var dio = Dio();
-  List<MotivasiModel> ass = [];
-  TextEditingController titleController = TextEditingController();
-
-  Future<dynamic> sendMotivasi(String isi) async {
-    Map<String, dynamic> body = {
-      "isi_motivasi": isi,
-      "iduser": widget.idUser
-    }; // [Tambah IDUSER -> Widget.iduser]
-
-    try {
-      Response response = await dio.post("$baseurl/api/dev/POSTmotivasi/",
-          data: body,
-          options: Options(
-              contentType: Headers
-                  .formUrlEncodedContentType)); // Formatnya Harus Form Data
-
-      print("Respon -> ${response.data} + ${response.statusCode}");
-
-      return response;
-    } catch (e) {
-      print("Error di -> $e");
-    }
-  }
-
-  List<MotivasiModel> listproduk = [];
-
-  Future<List<MotivasiModel>> getData() async {
-    var response = await dio.get(
-        '$baseurl/api/Get_motivasi?iduser=${widget.idUser}'); // NGambil by data
-
-    print(" ${response.data}");
-    if (response.statusCode == 200) {
-      var getUsersData = response.data as List;
-      var listUsers =
-          getUsersData.map((i) => MotivasiModel.fromJson(i)).toList();
-      return listUsers;
-    } else {
-      throw Exception('Failed to load');
-    }
-  }
-
-
-
-  Future<dynamic> deletePost(String id) async {
-    dynamic data = {
-      "id": id,
-    };
-    var response = await dio.delete('$baseurl/api/dev/DELETEmotivasi',
-        data: data,
-        options: Options(
-            contentType: Headers.formUrlEncodedContentType,
-            headers: {"Content-type": "application/json"}));
-
-    print(" ${response.data}");
-
-    var resbody = jsonDecode(response.data);
-    return resbody;
-  }
-
-  // Future<List<MotivasiModel>> getData2() async {
-  //   var response =
-  //       await dio.get('$baseurl/api/Get_motivasi'); // Ngambil by ALL USER
-
-  //   print(" ${response.data}");
-  //   if (response.statusCode == 200) {
-  //     var getUsersData = response.data as List;
-      
-  //     var listUsers = getUsersData.map((i) => MotivasiModel.fromJson(i)).toList();
-  //     return listUsers;
-  //   } else {
-  //     throw Exception('Failed to load');
-  //   }
-  // }
-
-
-  Future<void> _getData() async {
-    setState(() {
-      getData();
-      listproduk.clear();
-      return CircularProgressIndicator();
-    });
-  }
-
+  
   
 
   TextEditingController isiController = TextEditingController();
@@ -116,8 +32,7 @@ class _MainScreensState extends State<MainScreens> {
   @override
   void initState() {
     super.initState();
-    getData2();
-    _getData();
+
   }
 
   String trigger;
@@ -143,11 +58,7 @@ class _MainScreensState extends State<MainScreens> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Hallo  ${widget.nama}",
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w500),
-                        ),
+                        Text('sdas'),
                         TextButton(
                             child: Icon(Icons.logout),
                             onPressed: () {
@@ -173,47 +84,16 @@ class _MainScreensState extends State<MainScreens> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       child: ElevatedButton(
-                          onPressed: () async {
-                            if (isiController.text.toString().isEmpty) {
-                              Widget_Manager().flushbarInit("Data tidak boleh kosong!", Duration(seconds: 3),Colors.redAccent, FlushbarPosition.TOP).show(context);
-                            } else if (isiController.text.toString().isNotEmpty) {
-
-                              // await sendMotivasi(
-                              //   isiController.text.toString(),
-                              // ).then((value) => {
-                              //       if (value != null)
-                              //         {
-                              //           Flushbar(
-                              //             message: "Berhasil Submit",
-                              //             duration: Duration(seconds: 2),
-                              //             backgroundColor: Colors.greenAccent,
-                              //             flushbarPosition:
-                              //                 FlushbarPosition.TOP,
-                              //           ).show(context)
-                              //         }
-                              //     });
-                            }
-
-                            _getData();
-                            print("Sukses");
-                          },
+                          onPressed: () {},
                           child: Text("Submit")),
                     ),
 
                     TextButton(
                       child: Icon(Icons.refresh),
-                      onPressed: () {
-                        _getData();
-                      },
+                      onPressed: () {},
                     ),
                     FormBuilderRadioGroup(
-                        onChanged: (value) {
-                          setState(() {
-                            trigger = value;
-                            print(
-                                " HASILNYA --> $trigger"); // hasil ganti value
-                          });
-                        },
+                        // onChanged: () {},
                         name: "_",
                         options: ["Motivasi By All", "Motivasi By User"]
                             .map((e) => FormBuilderFieldOption(
@@ -221,7 +101,7 @@ class _MainScreensState extends State<MainScreens> {
                             .toList()),
 
                     if (trigger == "Motivasi By All") FutureBuilder(
-                            future: getData2(),
+                            future: null,
                             builder: (BuildContext context, AsyncSnapshot<List<MotivasiModel>> snapshot) {
                               if (snapshot.hasData) {
                                 
@@ -269,7 +149,7 @@ class _MainScreensState extends State<MainScreens> {
                             }) else Container(),
                     trigger == "Motivasi By User"
                         ? FutureBuilder(
-                            future: getData(),
+                            future:null,
                             builder: (BuildContext context,
                                 AsyncSnapshot<List<MotivasiModel>> snapshot) {
                               if (snapshot.hasData) {
@@ -313,27 +193,7 @@ class _MainScreensState extends State<MainScreens> {
                                                     ),
                                                     TextButton(
                                                       child: Icon(Icons.delete),
-                                                      onPressed: () {
-                                                        deletePost(item.id)
-                                                            .then((value) => {
-                                                                  if (value !=
-                                                                      null)
-                                                                    {
-                                                                      Flushbar(
-                                                                        message:
-                                                                            "Berhasil Delete",
-                                                                        duration:
-                                                                            Duration(seconds: 2),
-                                                                        backgroundColor:
-                                                                            Colors.redAccent,
-                                                                        flushbarPosition:
-                                                                            FlushbarPosition.TOP,
-                                                                      ).show(
-                                                                          context)
-                                                                    }
-                                                                });
-                                                        _getData();
-                                                      },
+                                                      onPressed: () {},
                                                     )
                                                   ]),
                                                 ]),
