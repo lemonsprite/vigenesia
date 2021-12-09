@@ -6,7 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:vigenesia/services/api_manager.dart';
 import 'package:vigenesia/services/shared_prefs.dart';
 // import 'package:dio/dio.dart';
-import 'MainScreens.dart';
+import 'package:vigenesia/Screens/MainScreens.dart';
 import 'Register.dart';
 import 'package:flutter/gestures.dart';
 
@@ -139,8 +139,8 @@ class _LoginState extends State<Login> {
                                             if (value != null)
                                               {
                                                 setState(() {
-                                                  SharedPrefs().keyInit('token', value.token);
-                                                      SharedPrefs().keyInit('idUser', value.user.id);
+                                                  SharedPrefs().keyInitString('token', value.token);
+                                                      SharedPrefs().keyInitInteger('idUser', value.user.id);
                                                   var token = SharedPrefs()
                                                       .keyFetch('token');
 
@@ -151,7 +151,7 @@ class _LoginState extends State<Login> {
                                                     new MaterialPageRoute(
                                                       builder: (BuildContext
                                                               context) =>
-                                                          new MainScreens(token: token)));
+                                                          new MainScreen()));
                                                 })
                                               }
                                             else if (value == null)
