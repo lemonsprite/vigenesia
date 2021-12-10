@@ -58,7 +58,7 @@ class _MainScreensState extends State<MainScreens> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('sdas'),
+                        Text(SharedPrefs().keyFetch('nama').toString()),
                         TextButton(
                             child: Icon(Icons.logout),
                             onPressed: () {

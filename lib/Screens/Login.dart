@@ -140,7 +140,9 @@ class _LoginState extends State<Login> {
                                               {
                                                 setState(() {
                                                   SharedPrefs().keyInitString('token', value.token);
-                                                      SharedPrefs().keyInitInteger('idUser', value.user.id);
+                                                  SharedPrefs().keyInitInteger('idUser', value.user.id);
+                                                  SharedPrefs().keyInitString('namaUser', value.user.nama);
+                                                  SharedPrefs().keyInitString('email', value.user.email);
                                                   var token = SharedPrefs()
                                                       .keyFetch('token');
 
@@ -151,7 +153,7 @@ class _LoginState extends State<Login> {
                                                     new MaterialPageRoute(
                                                       builder: (BuildContext
                                                               context) =>
-                                                          new MainScreen()));
+                                                          new MainScreens()));
                                                 })
                                               }
                                             else if (value == null)
