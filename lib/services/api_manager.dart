@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, non_constant_identifier_names
+// ignore_for_file: camel_case_types, non_constant_identifier_names, missing_return
 
 import 'dart:convert';
 
@@ -17,11 +17,13 @@ class API_Manager {
   Future<AuthCallback> login(String email, String password) async {
     try {
       Map data = {'email': email, 'password': password};
+
       var res = await client.post(
         Const.loginEndpoint,
         headers: {
           'Accept': 'application/json',
-          'ContentType': 'application/json'},
+          'ContentType': 'application/json'
+        },
         body: data,
       );
 
@@ -34,11 +36,9 @@ class API_Manager {
     } catch (e) {
       return callback;
     }
-    
   }
 
-  Future<AuthCallback> register(String nama, String email, String password,
-      String password_confirmation) async {
+  Future<AuthCallback> register(String nama, String email, String password, String password_confirmation) async {
     try {
       Map data = {
         'nama': nama,
@@ -56,11 +56,11 @@ class API_Manager {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = AuthCallback.fromJson(jsonMap);
+        return callback;
       }
     } catch (e) {
       return callback;
     }
-    return callback;
   }
 
   Future<GetMotivasi> getAllMotivasi(var token) async {
@@ -77,11 +77,11 @@ class API_Manager {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = GetMotivasi.fromJson(jsonMap);
+        return callback;
       }
     } catch (e) {
       throw callback;
     }
-    return callback;
   }
 
   Future<GetMotivasiByUser> getMotivasiUser(var token, var id) async {
@@ -98,11 +98,11 @@ class API_Manager {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = GetMotivasiByUser.fromJson(jsonMap);
+        return callback;
       }
     } catch (e) {
       throw callback;
     }
-    return callback;
   }
 
   Future<ResCallback> deleteMotivasi(var token, var id) async {
@@ -119,11 +119,11 @@ class API_Manager {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = ResCallback.fromJson(jsonMap);
+        return callback;
       }
     } catch (e) {
       throw callback;
     }
-    return callback;
   }
 
   Future<http.Response> postMotivasi(var isi, var idUser, var token) async {
@@ -143,10 +143,14 @@ class API_Manager {
         var jsonString = res.body;
         var jsonMap = json.decode(jsonString);
         callback = ResCallback.fromJson(jsonMap);
-      } else {}
+        return callback;
+      }
     } catch (e) {
       return callback;
     }
-    return callback;
   }
+
+  // Future<http.Response> logout(token) {
+  //   res = await http.post(Const.logoutEndpoint).then((res) => {})
+  // }
 }

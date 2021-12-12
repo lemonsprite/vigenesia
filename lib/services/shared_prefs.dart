@@ -1,21 +1,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  SharedPreferences _sharedPrefs;
+  static SharedPreferences _sharedPrefs;
   
+  static Future init() async => _sharedPrefs = await SharedPreferences.getInstance();
 
-  keyInitString(String key, String value) async {
-    _sharedPrefs = await SharedPreferences.getInstance();
-    _sharedPrefs.setString(key, value);
-  }
+  static keyInitString(String key, String value) => _sharedPrefs.setString(key, value);
 
-  keyFetch(String key) async {
-    _sharedPrefs = await SharedPreferences.getInstance();
-    return _sharedPrefs.getString(key);
-  }
+  static String keyFetch(String key) => _sharedPrefs.getString(key);
 
-  keyInitInteger(String key, int value) async {
-    _sharedPrefs = await SharedPreferences.getInstance();
-    _sharedPrefs.setInt(key, value);
-  }
+  static bool containKey(key) => _sharedPrefs.containsKey(key);
+  static Future clearKey() async => await _sharedPrefs.clear();
 }

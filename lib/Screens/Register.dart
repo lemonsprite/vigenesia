@@ -44,15 +44,6 @@ class _RegisterState extends State<Register> {
                   ),
                   SizedBox(height: 20),
                   FormBuilderTextField(
-                    name: "profesi",
-                    controller: profesiController,
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 10),
-                        border: OutlineInputBorder(),
-                        labelText: "Profesi"),
-                  ),
-                  SizedBox(height: 20),
-                  FormBuilderTextField(
                     name: "email",
                     controller: emailController,
                     decoration: InputDecoration(

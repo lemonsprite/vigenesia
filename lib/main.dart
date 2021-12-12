@@ -1,9 +1,16 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:vigenesia/screens/Login.dart';
+import 'package:vigenesia/screens/MainScreen.dart';
+import 'package:vigenesia/services/shared_prefs.dart';
 
-import 'Screens/Login.dart';
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() => runApp(MaterialApp(
+  await SharedPrefs.init();
+  runApp(
+    MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:
-          Login(), // <-- Buat Class Baru yg bernama MyScreen di dalam lib bikin folder baru screens isinya MyScreen.dart
-    ));
+      home: (SharedPrefs.keyFetch('token') != null) ? MainScreen() : Login(),
+    ),
+  );
+}

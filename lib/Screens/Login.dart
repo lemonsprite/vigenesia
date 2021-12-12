@@ -3,12 +3,13 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter/gestures.dart';
+
+// Import class
+import 'package:vigenesia/screens/MainScreen.dart';
 import 'package:vigenesia/services/api_manager.dart';
 import 'package:vigenesia/services/shared_prefs.dart';
-// import 'package:dio/dio.dart';
-import 'package:vigenesia/Screens/MainScreens.dart';
-import 'Register.dart';
-import 'package:flutter/gestures.dart';
+import 'package:vigenesia/Screens/Register.dart';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
@@ -46,7 +47,7 @@ class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  bool _isLoading = false;
+  // bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -129,22 +130,19 @@ class _LoginState extends State<Login> {
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
+                                  
                                   await API_Manager()
                                       .login(emailController.text,
                                           passwordController.text)
                                       .then((value) => {
                                             if (value != null)
                                               {
-                                                setState(() {
-                                                  SharedPrefs().keyInitString('token', value.token);
-                                                  SharedPrefs().keyInitInteger('idUser', value.user.id);
-                                                  SharedPrefs().keyInitString('namaUser', value.user.nama);
-                                                  SharedPrefs().keyInitString('email', value.user.email);
-                                                  var token = SharedPrefs()
-                                                      .keyFetch('token');
+                                                setState(() async {
+                                                  await SharedPrefs.keyInitString('token', value.token);
+                                                  await SharedPrefs.keyInitString('idUser', value.user.id.toString());
+                                                  await SharedPrefs.keyInitString('namaUser', value.user.nama);
+                                                  await SharedPrefs.keyInitString('email', value.user.email);
+                                                  var token = SharedPrefs.keyFetch('token');
 
                                                   print(
                                                       "Ini Data Id ---> $token");
@@ -153,7 +151,7 @@ class _LoginState extends State<Login> {
                                                     new MaterialPageRoute(
                                                       builder: (BuildContext
                                                               context) =>
-                                                          new MainScreens()));
+                                                          new MainScreen()));
                                                 })
                                               }
                                             else if (value == null)

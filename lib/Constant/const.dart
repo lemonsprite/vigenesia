@@ -10,6 +10,7 @@ class Const {
     return '$motivasiEndpoint/$id';
 
   }
+  static var logoutEndpoint = '$baseUrl/logout';
 
 
 }
