@@ -38,7 +38,8 @@ class API_Manager {
     }
   }
 
-  Future<AuthCallback> register(String nama, String email, String password, String password_confirmation) async {
+  Future<AuthCallback> register(String nama, String email, String password,
+      String password_confirmation) async {
     try {
       Map data = {
         'nama': nama,
@@ -64,24 +65,21 @@ class API_Manager {
   }
 
   Future<GetMotivasi> getAllMotivasi(var token) async {
-    try {
-      var res = await client.get(
-        Const.motivasiEndpoint,
-        headers: <String, String>{
-          'ContentType': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-      );
+    var res = await client.get(
+      Const.motivasiEndpoint,
+      headers: <String, String>{
+        'ContentType': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
 
-      if (res.statusCode == 200) {
-        var jsonString = res.body;
-        var jsonMap = json.decode(jsonString);
-        callback = GetMotivasi.fromJson(jsonMap);
-        return callback;
-      }
-    } catch (e) {
-      throw callback;
-    }
+    var jsonString = res.body;
+    // print(res.body);
+    var jsonMap = json.decode(jsonString);
+    print(jsonMap["data"]);
+    callback = GetMotivasi.fromJson(jsonMap);
+    print(callback);
+    return callback;
   }
 
   Future<GetMotivasiByUser> getMotivasiUser(var token, var id) async {

@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:vigenesia/Screens/Login.dart';
+import 'package:vigenesia/services/api_manager.dart';
 import 'package:vigenesia/services/shared_prefs.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key key}) : super(key: key);
@@ -10,14 +12,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String nama;
-  int idUser;
 
+  
 
   @override
   void initState() {
+    
     super.initState();
+    
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Text(nama),
+                Text(SharedPrefs.keyFetch("namaUser")),
                 SizedBox(
                   height: 10,
                 ),
@@ -69,7 +73,23 @@ class _MainScreenState extends State<MainScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: TabBarView(
                         children: [
-                          Text('data'),
+                          Container(
+                            child: FutureBuilder(
+                              future: API_Manager().getAllMotivasi(SharedPrefs.keyFetch("token")),
+                              builder: (context, snapshot) {
+                                if(snapshot.hasData == null) {
+                                  return Container();
+                                }
+                                List data = snapshot.data;
+                                print(data);
+                                return ListView.builder(
+                                  itemCount: snapshot.data,
+                                  itemBuilder: (context, index) {
+                                   return Text("Builder"); 
+                                  });
+                              },
+                            ),
+                          ),
                           Text("Motivasi User"),
                         ],
                       ),
@@ -78,12 +98,14 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 ElevatedButton(
                     onPressed: () async {
-                      await SharedPrefs.clearKey();
-                      Navigator.pushReplacement(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  new Login()));
+                      // await SharedPrefs.clearKey();
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     new MaterialPageRoute(
+                      //         builder: (BuildContext context) =>
+                      //             new Login()));
+                      var data = API_Manager().getAllMotivasi(SharedPrefs.keyFetch("token"));
+                      print(data);
                     },
                     child: Text('Clear'))
               ],

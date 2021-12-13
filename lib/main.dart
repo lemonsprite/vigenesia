@@ -10,7 +10,7 @@ Future main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: (SharedPrefs.keyFetch('token') != null) ? MainScreen() : Login(),
+      home: (SharedPrefs.containKey("token")) ? MainScreen() : Login(),
     ),
   );
 }

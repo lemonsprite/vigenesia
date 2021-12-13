@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final getMotivasi = getMotivasiFromJson(jsonString);
+
 import 'dart:convert';
 
 GetMotivasi getMotivasiFromJson(String str) => GetMotivasi.fromJson(json.decode(str));
@@ -9,19 +13,19 @@ class GetMotivasi {
         this.data,
     });
 
-    List<Datum> data;
+    List<Data> data;
 
     factory GetMotivasi.fromJson(Map<String, dynamic> json) => GetMotivasi(
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": List<Data>.from(data.map((x) => x.toJson())),
     };
 }
 
-class Datum {
-    Datum({
+class Data {
+    Data({
         this.id,
         this.isiMotivasi,
         this.user,
@@ -31,7 +35,7 @@ class Datum {
     String isiMotivasi;
     User user;
 
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
         isiMotivasi: json["isi_motivasi"],
         user: User.fromJson(json["user"]),
@@ -52,44 +56,18 @@ class User {
     });
 
     int id;
-    Nama nama;
-    Email email;
+    String nama;
+    String email;
 
     factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
-        nama: namaValues.map[json["nama"]],
-        email: emailValues.map[json["email"]],
+        nama: json["nama"],
+        email: json["email"],
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "nama": namaValues.reverse[nama],
-        "email": emailValues.reverse[email],
+        "nama": nama,
+        "email": email,
     };
-}
-
-enum Email { ADMIN_VIGENESIA_COM }
-
-final emailValues = EnumValues({
-    "admin@vigenesia.com": Email.ADMIN_VIGENESIA_COM
-});
-
-enum Nama { ADMIN }
-
-final namaValues = EnumValues({
-    "Admin": Nama.ADMIN
-});
-
-class EnumValues<T> {
-    Map<String, T> map;
-    Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        if (reverseMap == null) {
-            reverseMap = map.map((k, v) => new MapEntry(v, k));
-        }
-        return reverseMap;
-    }
 }

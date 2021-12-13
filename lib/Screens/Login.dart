@@ -137,11 +137,11 @@ class _LoginState extends State<Login> {
                                       .then((value) => {
                                             if (value != null)
                                               {
-                                                setState(() async {
-                                                  await SharedPrefs.keyInitString('token', value.token);
-                                                  await SharedPrefs.keyInitString('idUser', value.user.id.toString());
-                                                  await SharedPrefs.keyInitString('namaUser', value.user.nama);
-                                                  await SharedPrefs.keyInitString('email', value.user.email);
+                                                setState(() {
+                                                  SharedPrefs.keyInitString('token', value.token);
+                                                  SharedPrefs.keyInitString('idUser', value.user.id.toString());
+                                                  SharedPrefs.keyInitString('namaUser', value.user.nama);
+                                                  SharedPrefs.keyInitString('email', value.user.email);
                                                   var token = SharedPrefs.keyFetch('token');
 
                                                   print(
