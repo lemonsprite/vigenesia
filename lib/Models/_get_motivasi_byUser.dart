@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final getMotivasiByUser = getMotivasiByUserFromJson(jsonString);
+
 import 'dart:convert';
 
 GetMotivasiByUser getMotivasiByUserFromJson(String str) => GetMotivasiByUser.fromJson(json.decode(str));

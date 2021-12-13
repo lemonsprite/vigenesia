@@ -76,31 +76,26 @@ class API_Manager {
     var jsonString = res.body;
     // print(res.body);
     var jsonMap = json.decode(jsonString);
-    print(jsonMap["data"]);
+    // print(jsonMap);
     callback = GetMotivasi.fromJson(jsonMap);
-    print(callback);
+    // print(callback.data[1].isiMotivasi);
     return callback;
   }
 
   Future<GetMotivasiByUser> getMotivasiUser(var token, var id) async {
-    try {
-      var res = await client.get(
-        Const.motivasiByUser(id),
-        headers: <String, String>{
-          'ContentType': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-      );
+    var res = await client.get(
+      Const.motivasiByUser(id),
+      headers: <String, String>{
+        'ContentType': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
 
-      if (res.statusCode == 200) {
-        var jsonString = res.body;
-        var jsonMap = json.decode(jsonString);
-        callback = GetMotivasiByUser.fromJson(jsonMap);
-        return callback;
-      }
-    } catch (e) {
-      throw callback;
-    }
+    var jsonString = res.body;
+    var jsonMap = json.decode(jsonString);
+    callback = GetMotivasiByUser.fromJson(jsonMap);
+    // print(callback.data[0].motivasi[1].isiMotivasi);
+    return callback;
   }
 
   Future<ResCallback> deleteMotivasi(var token, var id) async {
