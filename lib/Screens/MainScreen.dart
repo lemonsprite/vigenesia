@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:vigenesia/Screens/Login.dart';
 import 'package:vigenesia/screens/_bottom_sheet_edit.dart';
 import 'package:vigenesia/services/api_manager.dart';
 import 'package:vigenesia/services/shared_prefs.dart';
@@ -50,6 +51,36 @@ class _MainScreenState extends State<MainScreen> {
             title: Text('Kelompok 5 | 12.5B.17'),
             centerTitle: true,
           ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.redAccent,
+              onPressed: () {
+                API_Manager()
+                    .logout(SharedPrefs.keyFetch("token"))
+                    .then((value) => {
+                          Widget_Manager()
+                              .flushbarInit(
+                                  "Anda berhasil Logout",
+                                  Duration(seconds: 3),
+                                  Colors.greenAccent,
+                                  FlushbarPosition.TOP)
+                              .show(context),
+                          SharedPrefs.clearKey(),
+                          Navigator.pushReplacement(
+                            context,
+                            new MaterialPageRoute(
+                              builder: (BuildContext context) => new Login(),
+                            ),
+                          ),
+                          Widget_Manager()
+                              .flushbarInit(
+                                  "Anda berhasil Logout",
+                                  Duration(seconds: 3),
+                                  Colors.greenAccent,
+                                  FlushbarPosition.TOP)
+                              .show(context)
+                        });
+              },
+              child: Icon(Icons.logout)),
           body: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -68,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 SizedBox(height: 10),
                 FormBuilderTextField(
-                  name: "isi_motivasi", 
+                  name: "isi_motivasi",
                   controller: motivasiController,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 10),
@@ -78,22 +109,35 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () async {
-                    API_Manager()
-                        .postMotivasi(
-                            motivasiController.text.toString(),
-                            SharedPrefs.keyFetch("idUser"),
-                            SharedPrefs.keyFetch("token"))
-                        .then((val) => {
-                              setState(() {
-                                _updateData();
-                              }),
-                              Widget_Manager().flushbarInit(
-                                  "Data Berhasil Disimpan",
-                                  Duration(seconds: 4),
-                                  Colors.greenAccent,
-                                  FlushbarPosition.TOP)
-                            });
+                  onPressed: () {
+                    if (motivasiController.text == "" ||
+                        motivasiController.text == null) {
+                      Widget_Manager()
+                          .flushbarInit(
+                              "Data tidak boleh kosong!",
+                              Duration(seconds: 4),
+                              Colors.redAccent,
+                              FlushbarPosition.TOP)
+                          .show(context);
+                    } else {
+                      API_Manager()
+                          .postMotivasi(
+                              motivasiController.text.toString(),
+                              SharedPrefs.keyFetch("idUser"),
+                              SharedPrefs.keyFetch("token"))
+                          .then((val) => {
+                                setState(() {
+                                  _updateData();
+                                }),
+                                Widget_Manager()
+                                    .flushbarInit(
+                                        "Data Berhasil Disimpan",
+                                        Duration(seconds: 4),
+                                        Colors.greenAccent,
+                                        FlushbarPosition.TOP)
+                                    .show(context)
+                              });
+                    }
                   },
                   child: Text("Simpan"),
                 ),
@@ -211,7 +255,15 @@ class _MainScreenState extends State<MainScreen> {
                                                     showModalBottomSheet(
                                                         context: context,
                                                         builder: (context) {
-                                                          return BottomSheetEdit(isiMotivasi: x.motivasi[index].isiMotivasi, idMotivasi: x.motivasi[index].id);
+                                                          return BottomSheetEdit(
+                                                              isiMotivasi: x
+                                                                  .motivasi[
+                                                                      index]
+                                                                  .isiMotivasi,
+                                                              idMotivasi: x
+                                                                  .motivasi[
+                                                                      index]
+                                                                  .id);
                                                         });
                                                   },
                                                 ),
@@ -232,7 +284,18 @@ class _MainScreenState extends State<MainScreen> {
                                                         .then((value) => {
                                                               setState(() {
                                                                 _updateData();
-                                                              })
+                                                              }),
+                                                              Widget_Manager()
+                                                                  .flushbarInit(
+                                                                      "Data Berhasil Dihapus!",
+                                                                      Duration(
+                                                                          seconds:
+                                                                              4),
+                                                                      Colors
+                                                                          .redAccent,
+                                                                      FlushbarPosition
+                                                                          .TOP)
+                                                                  .show(context)
                                                             });
                                                   },
                                                 ),

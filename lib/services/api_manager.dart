@@ -138,7 +138,7 @@ class API_Manager {
         return callback;
       }
     } catch (e) {
-      return callback;
+      return null;
     }
   }
 
@@ -164,7 +164,15 @@ class API_Manager {
       throw callback;
     }
   }
-  // Future<http.Response> logout(token) {
-  //   res = await http.post(Const.logoutEndpoint).then((res) => {})
-  // }
+  Future<http.Response> logout(token) async {
+    var res = await client.put(
+        Const.logoutEndpoint,
+        headers: <String, String>{
+          'ContentType': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+    return res;
+  }
 }

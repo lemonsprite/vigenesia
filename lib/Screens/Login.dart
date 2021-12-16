@@ -10,6 +10,7 @@ import 'package:vigenesia/screens/MainScreen.dart';
 import 'package:vigenesia/services/api_manager.dart';
 import 'package:vigenesia/services/shared_prefs.dart';
 import 'package:vigenesia/Screens/Register.dart';
+import 'package:vigenesia/widget/flushbar_widget.dart';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
@@ -129,29 +130,46 @@ class _LoginState extends State<Login> {
                           Container(
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton(
-                                onPressed: () async {
-                                  
-                                  await API_Manager()
+                                onPressed: () {
+                                  API_Manager()
                                       .login(emailController.text,
                                           passwordController.text)
                                       .then((value) => {
                                             if (value != null)
                                               {
                                                 setState(() {
-                                                  SharedPrefs.keyInitString('token', value.token);
-                                                  SharedPrefs.keyInitString('idUser', value.user.id.toString());
-                                                  SharedPrefs.keyInitString('namaUser', value.user.nama);
-                                                  SharedPrefs.keyInitString('email', value.user.email);
-                                                  var token = SharedPrefs.keyFetch('token');
+                                                  SharedPrefs.keyInitString(
+                                                      'token', value.token);
+                                                  SharedPrefs.keyInitString(
+                                                      'idUser',
+                                                      value.user.id.toString());
+                                                  SharedPrefs.keyInitString(
+                                                      'namaUser',
+                                                      value.user.nama);
+                                                  SharedPrefs.keyInitString(
+                                                      'email',
+                                                      value.user.email);
+                                                  // var token =
+                                                  //     SharedPrefs.keyFetch(
+                                                  //         'token');
 
-                                                  print(
-                                                      "Ini Data Id ---> $token");
+                                                  // print(
+                                                  //     "Ini Data Id ---> $token");
                                                   Navigator.pushReplacement(
                                                     context,
                                                     new MaterialPageRoute(
                                                       builder: (BuildContext
                                                               context) =>
-                                                          new MainScreen()));
+                                                          new MainScreen(),
+                                                    ),
+                                                  );
+                                                  Widget_Manager()
+                                                      .flushbarInit(
+                                                          "Berhasil Login!",
+                                                          Duration(seconds: 3),
+                                                          Colors.greenAccent,
+                                                          FlushbarPosition.TOP)
+                                                      .show(context);
                                                 })
                                               }
                                             else if (value == null)

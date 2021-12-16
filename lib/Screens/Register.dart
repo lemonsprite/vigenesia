@@ -86,33 +86,23 @@ class _RegisterState extends State<Register> {
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
                         onPressed: () async {
-                          await API_Manager()
+                          API_Manager()
                               .register(
                                   nameController.text,
                                   emailController.text,
                                   passwordController.text,
                                   password2Controller.text)
                               .then((value) {
-                            if (value != null) {
-                              setState(() {
-                                Navigator.pop(context);
-                                Widget_Manager()
+                            setState(() {
+                              Navigator.pop(context);
+                              Widget_Manager()
                                   .flushbarInit(
                                       'Registrasi berhasil!',
                                       Duration(seconds: 3),
                                       Colors.greenAccent,
                                       FlushbarPosition.TOP)
                                   .show(context);
-                              });
-                            } else {
-                              Widget_Manager()
-                                  .flushbarInit(
-                                      'Registrasi gagal! Silahkan cek kembali.',
-                                      Duration(seconds: 3),
-                                      Colors.redAccent,
-                                      FlushbarPosition.TOP)
-                                  .show(context);
-                            }
+                            });
                           });
                         },
                         child: Text("Daftar")),

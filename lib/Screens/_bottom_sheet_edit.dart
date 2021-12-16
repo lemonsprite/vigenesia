@@ -1,9 +1,11 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:vigenesia/services/api_manager.dart';
 import 'package:vigenesia/services/shared_prefs.dart';
+import 'package:vigenesia/widget/flushbar_widget.dart';
 
 class BottomSheetEdit extends StatefulWidget {
   var isiMotivasi;
@@ -53,10 +55,17 @@ class _BottomSheetEditState extends State<BottomSheetEdit> {
             ElevatedButton(
               onPressed: () async {
                 var data = motivasiController.text.toString();
+                
                 Navigator.pop(context);
                 await API_Manager().putMotivasi(SharedPrefs.keyFetch("token"),
                     widget.idMotivasi, (data == "") ? widget.isiMotivasi : data).then((value) => {
-                      print(SharedPrefs.keyFetch("token"))
+                      Navigator.pop(context),
+                      Widget_Manager().flushbarInit(
+                                  "Data Berhasil Disimpan",
+                                  Duration(seconds: 4),
+                                  Colors.greenAccent,
+                                  FlushbarPosition.TOP).show(context)
+
                     });
               },
               child: Text("Simpan"),
