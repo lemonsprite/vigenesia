@@ -1,7 +1,10 @@
+import 'package:another_flushbar/flushbar.dart';
 import "package:flutter/material.dart";
-import 'package:vigenesia/screens/_bottom_sheet_post.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:vigenesia/screens/_bottom_sheet_edit.dart';
 import 'package:vigenesia/services/api_manager.dart';
 import 'package:vigenesia/services/shared_prefs.dart';
+import 'package:vigenesia/widget/flushbar_widget.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key key}) : super(key: key);
@@ -11,50 +14,90 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  Future motivasiAllUser;
+  Future motivasiUser;
+
+  _updateData() {
+    motivasiAllUser = _getMotivasiAllUser();
+    motivasiUser = _getMotivasiUser();
+  }
+
   @override
   void initState() {
     super.initState();
+    _updateData();
+  }
+
+  _getMotivasiUser() async {
+    return await API_Manager().getMotivasiUser(
+        SharedPrefs.keyFetch("token"), SharedPrefs.keyFetch("idUser"));
+  }
+
+  _getMotivasiAllUser() async {
+    return await API_Manager().getAllMotivasi(SharedPrefs.keyFetch("token"));
   }
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController motivasiController = TextEditingController();
+
     return DefaultTabController(
       length: 2,
       child: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: Text('Kelompok 5 | 12.5B.17'),
             centerTitle: true,
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (context) => SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: BottomSheetPost(),
-                  ),
-                ),
-              );
-            },
-            backgroundColor: Colors.green,
-            child: const Icon(Icons.add),
-            tooltip: "Tambah Data Motivasi",
           ),
           body: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Selamat Datang, ${SharedPrefs.keyFetch("namaUser")}!',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
+                Text(
+                  "Tambah Motivasi",
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 10),
+                FormBuilderTextField(
+                  name: "isi_motivasi", 
+                  controller: motivasiController,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 10),
+                    border: OutlineInputBorder(),
+                    hintText: "Isi Motivasi",
+                  ),
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () async {
+                    API_Manager()
+                        .postMotivasi(
+                            motivasiController.text.toString(),
+                            SharedPrefs.keyFetch("idUser"),
+                            SharedPrefs.keyFetch("token"))
+                        .then((val) => {
+                              setState(() {
+                                _updateData();
+                              }),
+                              Widget_Manager().flushbarInit(
+                                  "Data Berhasil Disimpan",
+                                  Duration(seconds: 4),
+                                  Colors.greenAccent,
+                                  FlushbarPosition.TOP)
+                            });
+                  },
+                  child: Text("Simpan"),
+                ),
+                SizedBox(height: 20),
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
@@ -89,8 +132,7 @@ class _MainScreenState extends State<MainScreen> {
                         children: [
                           Container(
                             child: FutureBuilder(
-                              future: API_Manager().getAllMotivasi(
-                                  SharedPrefs.keyFetch("token")),
+                              future: motivasiAllUser,
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return Container(
@@ -98,8 +140,9 @@ class _MainScreenState extends State<MainScreen> {
                                           child: Text("Tidak ada data")));
                                 }
                                 var x = snapshot.data.data;
-                                // print(data);
                                 return ListView.builder(
+                                  // reverse: true,
+
                                   itemCount: x.length,
                                   itemBuilder: (context, index) {
                                     return Card(
@@ -132,9 +175,7 @@ class _MainScreenState extends State<MainScreen> {
                           ),
                           Container(
                             child: FutureBuilder(
-                              future: API_Manager().getMotivasiUser(
-                                  SharedPrefs.keyFetch("token"),
-                                  SharedPrefs.keyFetch("idUser")),
+                              future: motivasiUser,
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return Container(
@@ -142,7 +183,7 @@ class _MainScreenState extends State<MainScreen> {
                                           child: Text("Tidak ada data")));
                                 }
                                 var x = snapshot.data.data[0];
-                                print(x.nama);
+
                                 return ListView.builder(
                                   itemCount: x.motivasi.length,
                                   itemBuilder: (context, index) {
@@ -158,7 +199,45 @@ class _MainScreenState extends State<MainScreen> {
                                               child: Text(id.toString()),
                                             ),
                                             title: Text(
-                                                x.motivasi[index].isiMotivasi),
+                                              x.motivasi[index].isiMotivasi,
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                            trailing: Wrap(
+                                              children: [
+                                                IconButton(
+                                                  padding: EdgeInsets.all(4),
+                                                  icon: Icon(Icons.edit),
+                                                  onPressed: () {
+                                                    showModalBottomSheet(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return BottomSheetEdit(isiMotivasi: x.motivasi[index].isiMotivasi, idMotivasi: x.motivasi[index].id);
+                                                        });
+                                                  },
+                                                ),
+                                                IconButton(
+                                                  padding: EdgeInsets.all(4),
+                                                  icon: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.redAccent,
+                                                  ),
+                                                  onPressed: () async {
+                                                    await API_Manager()
+                                                        .deleteMotivasi(
+                                                            SharedPrefs
+                                                                .keyFetch(
+                                                                    "token"),
+                                                            x.motivasi[index]
+                                                                .id)
+                                                        .then((value) => {
+                                                              setState(() {
+                                                                _updateData();
+                                                              })
+                                                            });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -173,20 +252,6 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   ),
                 ),
-                // ElevatedButton(
-                //     onPressed: () async {
-                //       // await SharedPrefs.clearKey();
-                //       // Navigator.pushReplacement(
-                //       //     context,
-                //       //     new MaterialPageRoute(
-                //       //         builder: (BuildContext context) =>
-                //       //             new Login()));
-                //       var data = API_Manager().getMotivasiUser(
-                //           SharedPrefs.keyFetch("token"),
-                //           SharedPrefs.keyFetch("idUser"));
-                //       print(data);
-                //     },
-                //     child: Text('Clear'))
               ],
             ),
           ),

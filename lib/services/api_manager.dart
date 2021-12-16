@@ -38,8 +38,7 @@ class API_Manager {
     }
   }
 
-  Future<AuthCallback> register(String nama, String email, String password,
-      String password_confirmation) async {
+  Future<AuthCallback> register(String nama, String email, String password, String password_confirmation) async {
     try {
       Map data = {
         'nama': nama,
@@ -101,7 +100,7 @@ class API_Manager {
   Future<ResCallback> deleteMotivasi(var token, var id) async {
     try {
       var res = await client.delete(
-        Const.motivasiByUser(id),
+        Const.motivasiID(id),
         headers: <String, String>{
           'ContentType': 'application/json',
           'Authorization': 'Bearer $token'
@@ -143,6 +142,28 @@ class API_Manager {
     }
   }
 
+  Future<http.Response> putMotivasi(var token, var id, var isi) async {
+    Map data = {'isi_motivasi': isi};
+    try {
+      var res = await client.put(
+        Const.motivasiID(id),
+        headers: <String, String>{
+          'ContentType': Headers.formUrlEncodedContentType,
+          'Authorization': 'Bearer $token',
+        },
+        body: data,
+      );
+
+      if (res.statusCode == 200) {
+        var jsonString = res.body;
+        var jsonMap = json.decode(jsonString);
+        callback = ResCallback.fromJson(jsonMap);
+        return callback;
+      }
+    } catch (e) {
+      throw callback;
+    }
+  }
   // Future<http.Response> logout(token) {
   //   res = await http.post(Const.logoutEndpoint).then((res) => {})
   // }

@@ -9,7 +9,10 @@ class Const {
 
   static String motivasiByUser(var id) {
     return '$userEndpoint/$id';
+  }
 
+  static String motivasiID(var id) {
+    return '$motivasiEndpoint/$id';
   }
   static var logoutEndpoint = '$baseUrl/logout';
 
