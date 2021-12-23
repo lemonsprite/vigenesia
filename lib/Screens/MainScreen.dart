@@ -47,9 +47,18 @@ class _MainScreenState extends State<MainScreen> {
       child: SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+          
           appBar: AppBar(
             title: Text('Kelompok 5 | 12.5B.17'),
             centerTitle: true,
+            actions: [
+              IconButton(onPressed: () {
+                setState(() {
+                  _updateData();
+                });
+                Widget_Manager().flushbarInit("Data berhasil direfresh.", Duration(seconds: 3), Colors.greenAccent, FlushbarPosition.TOP).show(context);
+              }, icon: Icon(Icons.refresh))
+            ],
           ),
           floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.redAccent,
@@ -251,8 +260,8 @@ class _MainScreenState extends State<MainScreen> {
                                                 IconButton(
                                                   padding: EdgeInsets.all(4),
                                                   icon: Icon(Icons.edit),
-                                                  onPressed: () {
-                                                    showModalBottomSheet(
+                                                  onPressed: () async {
+                                                    var res = await showModalBottomSheet(
                                                         context: context,
                                                         builder: (context) {
                                                           return BottomSheetEdit(
@@ -265,6 +274,12 @@ class _MainScreenState extends State<MainScreen> {
                                                                       index]
                                                                   .id);
                                                         });
+                                                        if(res != null)
+                                                        {
+                                                          setState(() {
+                                                            _updateData();
+                                                          });
+                                                        }
                                                   },
                                                 ),
                                                 IconButton(

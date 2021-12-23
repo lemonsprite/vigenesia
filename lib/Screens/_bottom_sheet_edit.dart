@@ -59,7 +59,7 @@ class _BottomSheetEditState extends State<BottomSheetEdit> {
                 Navigator.pop(context);
                 await API_Manager().putMotivasi(SharedPrefs.keyFetch("token"),
                     widget.idMotivasi, (data == "") ? widget.isiMotivasi : data).then((value) => {
-                      Navigator.pop(context),
+                      Navigator.pop(context, value),
                       Widget_Manager().flushbarInit(
                                   "Data Berhasil Disimpan",
                                   Duration(seconds: 4),

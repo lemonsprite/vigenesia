@@ -70,13 +70,16 @@ class _EditPageState extends State<EditPage> {
                       putPost(isiMotivasiC.text, widget.id).then((value) => {
                             if (value != null)
                               {
-                                Navigator.pop(context),
+                                
+                                Navigator.pop(context, value),
                                 Flushbar(
                                   message: "Berhasil Update & Refresh dlu",
                                   duration: Duration(seconds: 5),
                                   backgroundColor: Colors.green,
                                   flushbarPosition: FlushbarPosition.TOP,
-                                ).show(context)
+                                ).show(context),
+
+                                
                               }
                           });
                     },
